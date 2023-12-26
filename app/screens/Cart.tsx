@@ -1,5 +1,11 @@
-import { addProduct, clearCart, reduceProduct } from 'app/utils/redux/cartSlice';
-import { useAppSelector } from 'app/utils/redux/hooks';
+import { AddSVG, ArrowBack, RemoveSVG } from 'app/assets/svg';
+import { CartStackScreenProps } from 'app/types/navigation';
+import {
+  addProduct,
+  clearCart,
+  reduceProduct,
+} from 'app/utils/redux/cartSlice';
+import { useAppDispatch, useAppSelector } from 'app/utils/redux/hooks';
 import React from 'react';
 import {
   FlatList,
@@ -11,73 +17,58 @@ import {
   View,
 } from 'react-native';
 
-const Cart = ({navigation}) => {
-  // const { addProduct, items, reduceProduct, products, subtotal, clearCart } =
-  // useCartStore(); // cart state magnaer
-
-  const {items, products, subtotal} = useAppSelector(state => state.cart); // cart state manager ̰
-
-  let x = 1; // used for index in flat list
-
+const Cart = ({ navigation }: CartStackScreenProps) => {
+  const { items, products, subtotal } = useAppSelector(state => state.cart);
+  const dispatch = useAppDispatch();
   return (
     <SafeAreaView className="w ̰-full bg-white h-full">
       <StatusBar backgroundColor={'#fff'} />
       <View className="p-5 flex items-center flex-row gap-5">
         <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
+          onPress={() => navigation.goBack()}
           className="bg-gray-100 p-2 rounded-full w-[45px] flex items-center justify-center h-[45px]">
-          {/* <Ionicons name="chevron-back-outline" size={25} color="black" /> */}
+          <ArrowBack />
         </TouchableOpacity>
-        <Text className="text-xl" style={{fontFamily: 'Manrope_400Regular'}}>
-          Shopping Cart({items})
-        </Text>
+        <Text className="text-base text-secondary">Shopping Cart({items})</Text>
       </View>
       {products?.length > 0 ? (
         <View className="px-5 max-h-[45vh]">
           <FlatList
             data={products}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return (
                 <View className="w-full flex flex-row items-center justify-between border-b border-gray-200 py-4 px-2">
                   <View>
                     <Image
                       className="mx-auto w-[70px] h-[35px]"
-                      source={{uri: item?.thumbnail}}
+                      source={{ uri: item?.thumbnail }}
                     />
                   </View>
                   <View className="w-1/3">
-                    <Text style={{fontFamily: 'Manrope_400Regular'}}>
-                      ${item?.title}
+                    <Text className="text-sm font-medium text-secondary">
+                      {item?.title}
                     </Text>
-                    <Text style={{fontFamily: 'Manrope_400Regular'}}>
-                      ${item?.price}
+                    <Text className="text-sm font-medium text-secondary">
+                      $ {item?.price}
                     </Text>
                   </View>
                   <View className="flex items-center flex-row gap-3">
                     <TouchableOpacity
-                      onPress={() => {
-                        addProduct(item);
-                      }}
+                      onPress={() => dispatch(reduceProduct(item.id))}
                       className="w-[40px] h-[40px] flex items-center justify-center bg-gray-100 rounded-full">
-                      {/* <AntDesign name="plus" size={20} color="black" /> */}
+                      <RemoveSVG />
                     </TouchableOpacity>
-                    <Text style={{fontFamily: 'Manrope_400Regular'}}>
-                      {item?.quantity}
-                    </Text>
+                    <Text>{item?.quantity}</Text>
                     <TouchableOpacity
-                      onPress={() => {
-                        reduceProduct(item);
-                      }}
+                      onPress={() => dispatch(addProduct(item))}
                       className="w-[40px] h-[40px] flex items-center justify-center bg-gray-100 rounded-full">
-                      {/* <AntDesign name="minus" size={20} color="black" /> */}
+                      <AddSVG color="#130F26" size={16} />
                     </TouchableOpacity>
                   </View>
                 </View>
               );
             }}
-            keyExtractor={item => x++}
+            keyExtractor={item => item?.id?.toString()}
           />
         </View>
       ) : (
@@ -90,49 +81,35 @@ const Cart = ({navigation}) => {
       )}
 
       {products?.length > 0 && (
-        <View className="flex flex-row justify-end items-center px-5">
+        <View className="my-2 flex-row justify-end items-center px-5">
           <TouchableOpacity
-            onPress={() => {
-              clearCart();
-            }}
+            onPress={() => dispatch(clearCart())}
             className="w-max">
-            <Text
-              style={{fontFamily: 'Manrope_400Regular'}}
-              className="text-base text-[#2A4BA0]">
-              Clear Cart
-            </Text>
+            <Text className="text-xs font-medium text-primary">Clear Cart</Text>
           </TouchableOpacity>
         </View>
       )}
       <View className="w-full p-2 absolute  -bottom-16">
-        <View className="p-5 w-full bg-[#F8F9FB] rounded-t-3xl h-[40vh]">
+        <View className="p-4 w-full bg-[#F8F9FB] rounded-t-3xl h-[40vh]">
           <View className="flex px-5 pb-5 w-full flex-row justify-between items-center">
-            <Text
-              style={{fontFamily: 'Manrope_500Medium'}}
-              className="text-xl text-gray-600">
-              Subtotal
-            </Text>
-            <Text className="text-xl ">${subtotal}</Text>
+            <Text className="text-base text-tertiary">Subtotal</Text>
+            <Text className="text-base text-secondary">${subtotal}</Text>
           </View>
           <View className="flex px-5 pb-5  w-full flex-row justify-between items-center">
-            <Text
-              style={{fontFamily: 'Manrope_500Medium'}}
-              className="text-xl text-gray-600">
-              Delivery
+            <Text className="text-base text-tertiary">Delivery</Text>
+            <Text className="text-base text-secondary">
+              ${items > 0 ? 2 : 0}
             </Text>
-            <Text className="text-xl ">${items > 0 ? 2 : 0}</Text>
           </View>
           <View className="flex px-5 pb-5  w-full flex-row justify-between items-center">
-            <Text
-              style={{fontFamily: 'Manrope_500Medium'}}
-              className="text-xl text-gray-600">
-              Total
+            <Text className="text-base text-tertiary">Total</Text>
+            <Text className="text-base text-secondary">
+              ${items > 0 ? subtotal + 2 : 0}
             </Text>
-            <Text className="text-xl ">${items > 0 ? subtotal + 2 : 0}</Text>
           </View>
           <View>
-            <TouchableOpacity className="w-full rounded-3xl bg-[#2A4BA0] p-5">
-              <Text className="text-center text-white text-base">
+            <TouchableOpacity className="w-full rounded-3xl bg-[#2A4BA0] py-[18px]">
+              <Text className="text-center text-white text-sm font-semibold">
                 Proceed To checkout
               </Text>
             </TouchableOpacity>
