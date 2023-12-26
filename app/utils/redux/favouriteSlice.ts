@@ -1,12 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+const initialState: {
+  fav_products: Array<Product>;
+} = {
+  fav_products: [],
+};
 
 const favouriteSlice = createSlice({
   name: 'favourite',
-  initialState: {
-    fav_products: [],
-  },
+  initialState,
   reducers: {
-    addFavProduct: (state, action) => {
+    addFavProduct: (state, action: PayloadAction<Product>) => {
+      console.log(action.payload);
       state.fav_products.push(action.payload);
     },
     removeFavProduct: (state, action) => {
@@ -17,6 +22,6 @@ const favouriteSlice = createSlice({
   },
 });
 
-export const {addFavProduct, removeFavProduct} = favouriteSlice.actions;
+export const { addFavProduct, removeFavProduct } = favouriteSlice.actions;
 
 export default favouriteSlice.reducer;
