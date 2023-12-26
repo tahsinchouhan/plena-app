@@ -1,22 +1,27 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { CategoriesSVG, HomeSVG } from 'app/assets/svg';
 import HomeScreen from 'app/screens/HomeScreen';
+import { TabScreenParamList } from 'app/types/tabNavigation';
 import React from 'react';
 import { View } from 'react-native';
-const Tab = createBottomTabNavigator();
+import {
+  HomeIcon,
+  CategoriesIcon,
+  FavouritesIcon,
+  MoreIcon,
+} from './TabBarIcons';
 
-const TabIcon = ({focused, icon}) => {
-  return (
-    <View
-      className={
-        focused
-          ? 'bg-[#000] shadow-md shadow-[#000] p-4 rounded-full absolute bottom-5'
-          : 'p-3 rounded-full '
-      }>
-      {icon}
-    </View>
-  );
+const Tab = createBottomTabNavigator<TabScreenParamList>();
+
+const FavouritesScreen = () => {
+  return <View />;
 };
+const MoreScreen = () => {
+  return <View />;
+};
+const CategoriesScreen = () => {
+  return <View />;
+};
+
 const BottomTabs = () => {
   return (
     <Tab.Navigator
@@ -26,78 +31,37 @@ const BottomTabs = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: 'absolute',
-          bottom: 15,
-          width: '95%',
-          left: 10,
-          borderRadius: 20,
+          borderRadius: 30,
           //   paddingTop: 35,
-          height: 60,
+          height: 90,
           //   paddingBottom: 35,
           backgroundColor: '#fff',
           shadowColor: 'black',
         },
+        headerBackgroundContainerStyle: {
+          backgroundColor: '#fff',
+        },
       }}>
       <Tab.Group>
         <Tab.Screen
-          options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({focused}) => {
-              return (
-                <TabIcon
-                  focused={focused}
-                  icon={<HomeSVG color={focused ? '#f0c537' : 'black'} />}
-                />
-              );
-            },
-          }}
+          options={{ tabBarIcon: HomeIcon }}
           name="Home"
           component={HomeScreen}
         />
         <Tab.Screen
-          options={{
-            tabBarLabel: 'Categories',
-            tabBarIcon: ({focused}) => {
-              return (
-                <TabIcon
-                  focused={focused}
-                  icon={<CategoriesSVG color={focused ? '#f0c537' : 'black'} />}
-                />
-              );
-            },
-          }}
+          options={{ tabBarIcon: CategoriesIcon }}
           name="Categories"
-          component={HomeScreen}
+          component={CategoriesScreen}
         />
         <Tab.Screen
-          options={{
-            tabBarLabel: 'Favourites',
-            tabBarIcon: ({focused}) => {
-              return (
-                <TabIcon
-                  focused={focused}
-                  icon={<HomeSVG color={focused ? '#f0c537' : 'black'} />}
-                />
-              );
-            },
-          }}
-          name="Favourites"
-          component={HomeScreen}
+          options={{ tabBarIcon: FavouritesIcon }}
+          name="Favorites"
+          component={FavouritesScreen}
         />
         <Tab.Screen
-          options={{
-            tabBarLabel: 'More',
-            tabBarIcon: ({focused}) => {
-              return (
-                <TabIcon
-                  focused={focused}
-                  icon={<CategoriesSVG color={focused ? '#f0c537' : 'black'} />}
-                />
-              );
-            },
-          }}
+          options={{ tabBarIcon: MoreIcon }}
           name="More"
-          component={HomeScreen}
+          component={MoreScreen}
         />
       </Tab.Group>
     </Tab.Navigator>
