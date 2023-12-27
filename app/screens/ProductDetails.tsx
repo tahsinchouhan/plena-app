@@ -1,4 +1,6 @@
-import { ArrowBack, HeartSVG, ShoppingBagSVG } from 'app/assets/svg';
+import { HeartSVG } from 'app/assets/svg';
+import CustomBackHandler from 'app/components/BackHandler';
+import CartIcon from 'app/components/CartIcon';
 import { ProductStackScreenProps } from 'app/types/navigation';
 import { addProduct } from 'app/utils/redux/cartSlice';
 import {
@@ -26,46 +28,35 @@ const Product = ({ navigation, route }: ProductStackScreenProps) => {
   const { items } = useAppSelector(state => state.cart); // cart state manager ̰
   const { fav_products } = useAppSelector(state => state.favourite); // favourite state manager ̰‸
   const isFav = !!fav_products?.find(p => p.id === item?.id);
-  console.log(isFav);
   const dispatch = useAppDispatch();
-
-  console.log(item);
 
   return (
     <SafeAreaView className="w-full bg-white h-full">
       <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
       <View className="p-5 items-center justify-between flex-row gap-5">
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          className="bg-gray-100 p-2 rounded-full w-[45px] flex items-center justify-center h-[45px]">
-          <ArrowBack />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Cart')}
-          className="">
-          <ShoppingBagSVG color="black" />
-          <Text className="absolute -top-2 bg-[#ffc800] text-base w-6 rounded-full -right-4 text-center h-6">
-            {items}
-          </Text>
-        </TouchableOpacity>
+        <CustomBackHandler navigation={navigation} />
+        <CartIcon navigation={navigation} items={items} />
       </View>
       <View>
         <View className="px-5">
           <Text className="text-5xl font-light text-secondary pt-5 capitalize">
             {item?.brand}
-            <Text className="text-xl text-primary">({item?.category})</Text>
+            {/* <Text className="text-xl text-primary">({item?.category})</Text> */}
           </Text>
           <Text className="text-5xl font-extrabold text-secondary pt-2 capitalize">
             {item?.title}
           </Text>
-          <AirbnbRating
-            count={5}
-            defaultRating={item?.rating}
-            size={16}
-            ratingContainerStyle={styles.ratingContainerStyle}
-            starContainerStyle={styles.starContainerStyle}
-            reviews={[]}
-          />
+          <View className="flex-row space-x-2 items-center">
+            <AirbnbRating
+              count={5}
+              defaultRating={item?.rating}
+              size={16}
+              ratingContainerStyle={styles.ratingContainerStyle}
+              starContainerStyle={styles.starContainerStyle}
+              reviews={[]}
+            />
+            <Text className="text-sm text-[#A1A1AB] mt-1">110 Reviews</Text>
+          </View>
         </View>
         <View>
           <TouchableOpacity
@@ -76,7 +67,7 @@ const Product = ({ navigation, route }: ProductStackScreenProps) => {
                 dispatch(removeFavProduct(item?.id));
               }
             }}
-            className="absolute z-[999] bg-[#000000d8] w-[40px] h-[40px] rounded-full flex right-5 items-center justify-center">
+            className="absolute z-[999] bg-white w-14 h-14 rounded-[20px] right-5 items-center justify-center">
             <HeartSVG active={!!isFav} />
           </TouchableOpacity>
           <Carousel
@@ -105,9 +96,11 @@ const Product = ({ navigation, route }: ProductStackScreenProps) => {
           <Text className="text-base font-semibold text-[#2A4BA0]">
             ${item?.price}
           </Text>
-          <Text className="text-xs font-normal bg-[#2A4BA0] rounded-full px-3 py-1 text-white">
-            ${item?.discountPercentage}%
-          </Text>
+          <View className="bg-[#2A4BA0] rounded-full">
+            <Text className="text-xs font-normal  px-3 py-1 text-white">
+              ${item?.discountPercentage} OFF
+            </Text>
+          </View>
         </View>
         <View className=" flex flex-row gap-3 items-center py-5 px-5">
           <TouchableOpacity
@@ -138,6 +131,7 @@ const styles = StyleSheet.create({
   ratingContainerStyle: {
     height: 25,
     alignItems: 'flex-start',
+    justifyContent: 'center',
   },
   starContainerStyle: {
     marginBottom: 17,

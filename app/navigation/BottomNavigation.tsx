@@ -4,9 +4,9 @@ import { TabScreenParamList } from 'app/types/tabNavigation';
 import React from 'react';
 import { View } from 'react-native';
 import {
-  HomeIcon,
   CategoriesIcon,
   FavouritesIcon,
+  HomeIcon,
   MoreIcon,
 } from './TabBarIcons';
 
@@ -32,9 +32,7 @@ const BottomTabs = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           borderRadius: 30,
-          //   paddingTop: 35,
           height: 90,
-          //   paddingBottom: 35,
           backgroundColor: '#fff',
           shadowColor: 'black',
         },

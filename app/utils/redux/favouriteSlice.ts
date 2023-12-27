@@ -11,7 +11,6 @@ const favouriteSlice = createSlice({
   initialState,
   reducers: {
     addFavProduct: (state, action: PayloadAction<Product>) => {
-      console.log(action.payload);
       state.fav_products.push(action.payload);
     },
     removeFavProduct: (state, action) => {
